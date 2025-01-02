@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      bash -c "
+      bundle exec rails db:create &&
+      bundle exec rails db:migrate &&
+      ./bin/rails server -b 0.0.0.0 -p 3000
+      "
+    volumes:
+      - .:/rails
+      - gem_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/saturday_league_football_development
+      - REDIS_URL=redis://redis:6379/1
+      - WEBPACK_DEV_SERVER_HOST=0.0.0.0
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+volumes:
+  gem_cache:
+  node_modules:
+  pg_data:
