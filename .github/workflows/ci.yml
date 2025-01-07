@@ -37,6 +37,9 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Install gems
+        run: bundle install --jobs 4 --retry 3
+
       - name: Wait for PostgreSQL
         run: |
           for i in {1..10}; do
@@ -56,7 +59,7 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:password@localhost:5432/saturday_league_football
-        run: rspec .
+        run: bundle exec rspec
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
