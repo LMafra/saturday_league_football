@@ -79,3 +79,4 @@ config/credentials.yml.enc
 *.backup
 
 /config/master.key
+secrets.yml
