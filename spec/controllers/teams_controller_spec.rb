@@ -1,4 +1,4 @@
-# frozen_string_literal: truechampionship_sample
+# frozen_string_literal: true
 
 require 'rails_helper'
 
