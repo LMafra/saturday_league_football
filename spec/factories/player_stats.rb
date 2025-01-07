@@ -8,15 +8,15 @@ FactoryBot.define do
     was_goalkeeper { [true, false].sample }
 
     trait :with_player do
-      player { create(:player) }
+      player { FactoryBot.create(:player) }
     end
 
     trait :with_team do
-      team { create(:team) }
+      team { FactoryBot.create(:team) }
     end
 
     trait :with_match do
-      match { create(:match, :with_round, :with_team_1, :with_team_2) }
+      match { FactoryBot.create(:match, :with_round, :with_team_1, :with_team_2) }
     end
   end
 end

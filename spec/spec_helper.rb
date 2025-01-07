@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+require "shoulda/matchers"
 require 'simplecov'
+
 SimpleCov.start 'rails' do
   add_filter %w[
     app/views lib/rails lib/templates

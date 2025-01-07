@@ -6,15 +6,15 @@ FactoryBot.define do
     draw { [true, false].sample }
 
     trait :with_round do
-      round { create(:round, :with_championship) }
+      round { FactoryBot.create(:round, :with_championship) }
     end
 
     trait :with_team_1 do
-      team_1 { create(:team) }
+      team_1 { FactoryBot.create(:team) }
     end
 
     trait :with_team_2 do
-      team_2 { create(:team) }
+      team_2 { FactoryBot.create(:team) }
     end
 
     trait :with_winning_team do

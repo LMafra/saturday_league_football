@@ -14,7 +14,7 @@ RSpec.describe ChampionshipsController, type: :controller do
   describe '#create' do
     context 'with valid params' do
       it 'creates a new championship' do
-        expect { post :create, params: { championship: championship_sample } }.to change(Championship, :count).by(1)
+        expect { post :create, params: { championship: { name: 'La Liga' } } }.to change(Championship, :count).by(1)
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe ChampionshipsController, type: :controller do
 
   describe '#destroy' do
     it 'destroys the requested championship' do
-      championship = create(:championship)
+      championship = FactoryBot.create(:championship)
       expect { delete :destroy, params: { id: championship.id } }.to change(Championship, :count).by(-1)
     end
   end
