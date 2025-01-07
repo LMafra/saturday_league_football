@@ -50,7 +50,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run RuboCop
-        run: rubocop -f github
+        run: bin/rubocop -f github
 
       - name: Run RSpec tests
         env:
