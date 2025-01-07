@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe ChampionshipsController, type: :controller do
-
   let(:championship_sample) { FactoryBot.create(:championship) }
 
   describe '#index' do
@@ -27,7 +26,6 @@ RSpec.describe ChampionshipsController, type: :controller do
   end
 
   describe '#update' do
-
     it 'updates the championship' do
       patch :update, params: { id: championship_sample.id, championship: { name: 'Updated' } }
       expect(championship_sample.reload.name).to eq('Updated')

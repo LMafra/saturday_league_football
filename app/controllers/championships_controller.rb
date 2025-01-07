@@ -3,12 +3,12 @@
 class ChampionshipsController < ApplicationController
   before_action :set_championship, only: %i[show update destroy]
   def index
-    @championships = Championship.all
-    render json: @championships
+    @championships = Championship.all.includes(:rounds)
+    render json: @championships.as_json(include: :rounds, methods: :round_total)
   end
 
   def show
-    render json: @championship
+    render json: @championship.as_json(include: :rounds)
   end
 
   def create

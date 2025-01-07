@@ -1,70 +1,38 @@
-# syntax=docker/dockerfile:1
+# Base image with specified Ruby version
+FROM ruby:3.3.6
 
-# Stage 1: Base image
-ARG RUBY_VERSION=3.3.6
-FROM ruby:$RUBY_VERSION-slim AS base
+# Set environment variables
+ENV RAILS_ENV=development \
+    NODE_ENV=development \
+    BUNDLER_VERSION=2.4.0
 
-WORKDIR /rails
+# Install required dependencies
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    curl \
+    nodejs \
+    yarn \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install base packages
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+# Set working directory inside the container
+WORKDIR /app
 
-# Set environment variables for Rails
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+# Install bundler
+RUN gem install bundler -v $BUNDLER_VERSION
 
-# Stage 2: Build image
-FROM base AS build
-
-# Install build tools and Node.js
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev node-gyp pkg-config python-is-python3 && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
-ARG NODE_VERSION=20.11.1
-ARG YARN_VERSION=latest
-ENV PATH=/usr/local/node/bin:$PATH
-
-RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
-    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
-    npm install -g yarn@$YARN_VERSION && \
-    rm -rf /tmp/node-build-master
-
-# Install application dependencies
+# Copy the Gemfile and Gemfile.lock
 COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+# Install Ruby gems
+RUN bundle install --jobs 4 --retry 3
 
-# Copy application code and precompile assets
-COPY . ./
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile && \
-    npm run build && \
-    rm -rf node_modules
+# Copy the rest of the application code
+COPY . .
 
-# Stage 3: Final image
-FROM base
+# Expose port 3000 for the Rails server
+EXPOSE 3000
 
-# Copy built application and dependencies
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
-
-# Configure non-root user for runtime
-RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER 1000:1000
-
-# Entrypoint prepares the database
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
-
-# Start the Rails server by default
-EXPOSE 80
-CMD ["./bin/thrust", "./bin/rails", "server"]
+# Command to start the Rails server
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

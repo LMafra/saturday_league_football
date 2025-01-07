@@ -15,7 +15,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_24_014444) do
   enable_extension "pg_catalog.plpgsql"
 
   create_table "championships", force: :cascade do |t|
-    t.string "CreateChampionships", null: false
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

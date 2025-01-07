@@ -13,6 +13,4 @@ RSpec.describe PlayerStat, type: :model do
   it { should validate_presence_of :own_goals }
   it { should be_valid }
   # it { should validate_inclusion_of(:was_goalkeeper).in_array([true, false]) }
-
-
 end

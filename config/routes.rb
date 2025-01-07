@@ -14,9 +14,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-
   resources :championships
   resources :rounds
-
-  root 'homepage#index'
+  resources :matches
+  resources :teams
+  resources :players
 end
