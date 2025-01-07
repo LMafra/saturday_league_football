@@ -50,13 +50,13 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run RuboCop
-        run: bin/rubocop -f github
+        run: rubocop -f github
 
       - name: Run RSpec tests
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:password@localhost:5432/saturday_league_football
-        run: bin/rspec
+        run: rspec .
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
