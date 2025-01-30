@@ -50,6 +50,9 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:password@localhost:5432/saturday_league_football
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: saturday_league_football
         run: bin/rails db:create db:schema:load
 
       - name: Run RuboCop
