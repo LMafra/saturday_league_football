@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.id match.id
 json.name match.name
 json.team_1 match.team_1
