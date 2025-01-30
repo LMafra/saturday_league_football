@@ -13,6 +13,9 @@ services:
       - redis
     environment:
       DATABASE_URL: "postgresql://postgres:password@db:5432/saturday_league_football"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: saturday_league_football
       REDIS_URL: "redis://redis:6379/1"
       RAILS_ENV: development
       NODE_ENV: development
