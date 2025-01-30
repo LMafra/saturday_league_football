@@ -71,6 +71,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libvips libjemalloc2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'yarn'
+
+      - name: Install JavaScript dependencies
+        run: yarn install --frozen-lockfile
+
       - name: Wait for PostgreSQL
         run: |
           for i in {1..10}; do
