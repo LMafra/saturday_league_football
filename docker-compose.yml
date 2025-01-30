@@ -13,6 +13,7 @@ services:
       - redis
     environment:
       DATABASE_URL: "postgresql://postgres:password@db:5432/saturday_league_football"
+      DATABASE_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: saturday_league_football
