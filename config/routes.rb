@@ -19,7 +19,12 @@ Rails.application.routes.draw do
       resources :rounds, defaults: { format: :json }
       resources :matches, defaults: { format: :json }
       resources :teams, defaults: { format: :json }
-      resources :players, defaults: { format: :json }
+      resources :players, defaults: { format: :json } do
+        post 'add_to_round', on: :member
+        post 'add_to_team', on: :member
+        get 'match_stats', on: :member
+      end
+
       resources :player_stats, defaults: { format: :json }
 
       match '*any', via: [:options], to: -> (_) { [204, { 'Content-Type' => 'text/plain' }, []] }
